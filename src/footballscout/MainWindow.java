@@ -26,7 +26,12 @@ public class MainWindow extends Application {
 	
 	public static void main(String[] args) {
 		final String[] _args = args;
-
+		
+		// XML Helper Example
+		// The webservice's URL is set in the config.properties file. 
+//		XMLHelper xmlHelper = XMLHelper.getInstance();
+//		System.out.println(xmlHelper.getStatById("45664", "position"));
+		
 		Thread t = new Thread(new Runnable() {	
 			public void run()
 			{
