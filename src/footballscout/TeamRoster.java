@@ -58,6 +58,25 @@ public class TeamRoster extends Parent{
 		hbox.getChildren().addAll(l1, l2);
 		detailedDataGridPane.add(hbox, 0, 0);
 
+		ImageView imageDecline = new ImageView(new Image(new File("images/close_icon.png").toURI().toString()));
+		imageDecline.setFitHeight(25);
+		imageDecline.setFitWidth(25);
+		Button closeButton = new Button();
+		closeButton.setGraphic(imageDecline);
+		closeButton.setOnAction(new EventHandler<ActionEvent>() {
+
+			public void handle(ActionEvent event) {
+				int removedColumnIndex = m_DataGridPane.getColumnIndex(detailedDataGridPane);
+				m_DataGridPane.getChildren().remove(detailedDataGridPane);
+				for(int i=removedColumnIndex+1; i<m_NumSelectedRadioButtons; ++i)
+					m_DataGridPane.setColumnIndex(m_DataGridPane.getChildren().get(i), i-1);
+
+				--m_NumSelectedRadioButtons;
+				rb.setSelected(false);
+			}
+		});
+		detailedDataGridPane.add(closeButton, 1,0);
+		
 		l1 = new Label("Total time played ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		detailedDataGridPane.add(l1, 0, 1);
@@ -224,6 +243,7 @@ public class TeamRoster extends Parent{
 		// We're done with drag and drop events
 		//=====================================
 
+		// Radio button event
 		rb.setOnAction(new EventHandler<ActionEvent>() {
 			@Override public void handle(ActionEvent e) {
 				//Execute some code here for the event.

@@ -15,7 +15,6 @@ import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.ui.ApplicationFrame;
-import org.jfree.ui.RefineryUtilities;
 
 public class LineChart extends ApplicationFrame {
 
@@ -46,14 +45,14 @@ public class LineChart extends ApplicationFrame {
 		m_Frame.setVisible(b);
 	}
 	
-	public void AddData(double value, Comparable seriesKey, Comparable columnKey)
+	public void AddData(double value, Comparable series, Comparable columnKey)
 	{
-		m_Dataset.setValue(value, seriesKey, columnKey);
+		m_Dataset.setValue(value, series, columnKey);
 	}
 
-	public void RemoveSeries(Comparable seriesKey)
+	public void RemoveSeries(Comparable series)
 	{
-		m_Dataset.removeRow(seriesKey);
+		m_Dataset.removeRow(series);
 	}
 
 	// For testing purposes only
