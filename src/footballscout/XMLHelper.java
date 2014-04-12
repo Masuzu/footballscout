@@ -45,7 +45,7 @@ public class XMLHelper {
 		return result;
 	}
 	
-	static public XMLHelper getInstance(){
+	public static XMLHelper getInstance(){
 		if(instance==null){
 			instance = new XMLHelper();
 		}
