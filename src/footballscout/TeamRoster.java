@@ -36,25 +36,23 @@ public class TeamRoster extends Parent{
 	private ScrollPane m_DataScrollPane = new ScrollPane();
 	private int m_NumSelectedRadioButtons = 0;
 	private HashMap<String, GridPane> m_MapDetailedDataGridPane = new HashMap<String, GridPane>();
-	
-	public void AddPlayer(String name, String picture)
+
+	private GridPane CreateDetailedDataGridPane(final String name, String playerID, final RadioButton rb)
 	{
-		ImageView playerPicture = new ImageView(new Image(new File(picture).toURI().toString()));
-		playerPicture.setFitHeight(50);
-		playerPicture.setPreserveRatio(true);
-
-		final RadioButton rb = new RadioButton();
-		rb.setFocusTraversable(false);
-		rb.setSelected(false);
-		rb.setUserData(name);
-
+		//==========================================================
 		// Create the list of data to display for the current player
+		
 		final GridPane detailedDataGridPane = new GridPane();
-		HBox hbox = new HBox();
+
+		m_MapDetailedDataGridPane.put(name, detailedDataGridPane);
+		
 		Label l1 = new Label("Name ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
+		// TODO
+		// final String name = XMLHelper.getInstance().getStat("1262", "playerName");
 		Label l2 = new Label(name);
 		l2.setStyle("-fx-font-size: 16pt");
+		HBox hbox = new HBox();
 		hbox.getChildren().addAll(l1, l2);
 		detailedDataGridPane.add(hbox, 0, 0);
 
@@ -76,10 +74,15 @@ public class TeamRoster extends Parent{
 			}
 		});
 		detailedDataGridPane.add(closeButton, 1,0);
-		
+
 		l1 = new Label("Total time played ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		detailedDataGridPane.add(l1, 0, 1);
+		// TODO
+		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "timePlayed"));
+		//l2.setStyle("-fx-font-size: 16pt");
+		//hbox = new HBox();
+		//hbox.getChildren().addAll(l1, l2);
 
 		Button btn = new Button("Pass precision");
 		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
@@ -114,30 +117,65 @@ public class TeamRoster extends Parent{
 		l1 = new Label("T-shirt number ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		detailedDataGridPane.add(l1, 0, 5);
+		// TODO
+		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "jerseyNumber"));
+		//l2.setStyle("-fx-font-size: 16pt");
+		//hbox = new HBox();
+		//hbox.getChildren().addAll(l1, l2);
 
 		l1 = new Label("Favorite position ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		detailedDataGridPane.add(l1, 0, 6);
+		// TODO
+		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "position"));
+		//l2.setStyle("-fx-font-size: 16pt");
+		//hbox = new HBox();
+		//hbox.getChildren().addAll(l1, l2);
 
 		l1 = new Label("Number of yellow cards ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		detailedDataGridPane.add(l1, 0, 7);
+		// TODO
+		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "yellowcard"));
+		//l2.setStyle("-fx-font-size: 16pt");
+		//hbox = new HBox();
+		//hbox.getChildren().addAll(l1, l2);
 
 		l1 = new Label("Number of red cards ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		detailedDataGridPane.add(l1, 0, 8);
+		// TODO
+		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "redcard"));
+		//l2.setStyle("-fx-font-size: 16pt");
+		//hbox = new HBox();
+		//hbox.getChildren().addAll(l1, l2);
 
 		l1 = new Label("Number of injuries ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		detailedDataGridPane.add(l1, 0, 9);
+		// TODO
+		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "injury"));
+		//l2.setStyle("-fx-font-size: 16pt");
+		//hbox = new HBox();
+		//hbox.getChildren().addAll(l1, l2);
 
 		l1 = new Label("Number of balls touched ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		detailedDataGridPane.add(l1, 0, 10);
+		// TODO
+		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "ballTouched"));
+		//l2.setStyle("-fx-font-size: 16pt");
+		//hbox = new HBox();
+		//hbox.getChildren().addAll(l1, l2);
 
 		l1 = new Label("Number of matches ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		detailedDataGridPane.add(l1, 0, 11);
+		// TODO
+		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "appearance"));
+		//l2.setStyle("-fx-font-size: 16pt");
+		//hbox = new HBox();
+		//hbox.getChildren().addAll(l1, l2);
 
 		btn = new Button("Average zone");
 		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
@@ -150,8 +188,6 @@ public class TeamRoster extends Parent{
 		detailedDataGridPane.add(btn, 0, 12);
 		detailedDataGridPane.setStyle("-fx-background-color:#F5F5F5;");
 
-		m_MapDetailedDataGridPane.put(name, detailedDataGridPane);
-		
 		//======================//
 		// Drag and drop events //
 		//======================//
@@ -159,7 +195,6 @@ public class TeamRoster extends Parent{
 		// See http://docs.oracle.com/javafx/2/drag_drop/jfxpub-drag_drop.htm#BABHDFEJ
 
 		// Starting the Drag-and-Drop Gesture on a Source
-		final String _name = name;
 		detailedDataGridPane.setOnDragDetected(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent event) {
 				/* drag was detected, start a drag-and-drop gesture*/
@@ -168,7 +203,7 @@ public class TeamRoster extends Parent{
 
 				/* Put a string on a dragboard */
 				ClipboardContent content = new ClipboardContent();
-				content.putString(_name);
+				content.putString(name);
 				db.setContent(content);
 
 				event.consume();
@@ -242,6 +277,23 @@ public class TeamRoster extends Parent{
 
 		// We're done with drag and drop events
 		//=====================================
+		
+		return detailedDataGridPane;
+	}
+
+	public void AddPlayer(final String name, String picture)
+	{
+		//=============================================
+		// Add the player to the radio button grid pane
+
+		ImageView playerPicture = new ImageView(new Image(new File(picture).toURI().toString()));
+		playerPicture.setFitHeight(50);
+		playerPicture.setPreserveRatio(true);
+
+		final RadioButton rb = new RadioButton();
+		rb.setFocusTraversable(false);
+		rb.setSelected(false);
+		rb.setUserData(name);
 
 		// Radio button event
 		rb.setOnAction(new EventHandler<ActionEvent>() {
@@ -249,13 +301,14 @@ public class TeamRoster extends Parent{
 				//Execute some code here for the event.
 				if(rb.isSelected())
 				{
-					System.out.println(_name + " selected");
-					m_DataGridPane.add(detailedDataGridPane, m_NumSelectedRadioButtons, 0);
+					System.out.println(name + " selected");
+					m_DataGridPane.add(CreateDetailedDataGridPane(name, "", rb), m_NumSelectedRadioButtons, 0);
 					++m_NumSelectedRadioButtons;
 				}
 				else
 				{    		
-					System.out.println(_name + " deselected");
+					System.out.println(name + " deselected");
+					GridPane detailedDataGridPane = m_MapDetailedDataGridPane.get(name);
 					int removedColumnIndex = m_DataGridPane.getColumnIndex(detailedDataGridPane);
 					m_DataGridPane.getChildren().remove(detailedDataGridPane);
 					for(int i=removedColumnIndex+1; i<m_NumSelectedRadioButtons; ++i)
@@ -274,7 +327,11 @@ public class TeamRoster extends Parent{
 		++m_NumPlayers;
 	}
 
-	public TeamRoster(){
+	public TeamRoster()
+	{
+		// TODO
+		// Retrieve the list of players from the XML
+
 		AddPlayer("p1", "images/p1.jpg");
 		AddPlayer("p2", "images/p2.jpg");
 		for(int i=3;i<20;++i)
