@@ -16,7 +16,7 @@ import org.w3c.dom.Document;
 public class XMLHelper {
 	private static XMLHelper instance;
 	private static Document doc;
-	private static final String QUERY_TEMPLATE = "/playerStats/playerStat[playerId=%s]/%s";
+	private static final String QUERY_TEMPLATE = "//%s[../playerId=%s]";
 	
 	private XMLHelper(){
 		ResourceBundle rb = ResourceBundle.getBundle("config");
@@ -30,8 +30,8 @@ public class XMLHelper {
 		}
 	}
 	
-	public String getStat(String playerId, String item){
-		String query = String.format(QUERY_TEMPLATE,playerId,item);
+	public String getStatById(String playerId, String item){
+		String query = String.format(QUERY_TEMPLATE,item,playerId);
 		String result = null;
 		// XPath
 		XPathFactory xPathfactory = XPathFactory.newInstance();
@@ -52,4 +52,9 @@ public class XMLHelper {
 		return instance;
 	}
 	
+	public static void main(String args[]){
+		// XMLHelper example
+		XMLHelper x = XMLHelper.getInstance();
+		System.out.println(x.getStatById("45664", "position"));
+	}
 }
