@@ -26,7 +26,7 @@ public class MainWindow extends Application {
 	
 	public static void main(String[] args) {
 		final String[] _args = args;
-
+		
 		Thread t = new Thread(new Runnable() {	
 			public void run()
 			{
