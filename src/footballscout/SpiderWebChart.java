@@ -29,7 +29,7 @@ public class SpiderWebChart extends ApplicationFrame
 
 		m_Chart = CreateChart(chartTitle, m_Dataset);   
 		m_ChartPanel = new ChartPanel(m_Chart);   
-		m_ChartPanel.setPreferredSize(new Dimension(500, 270));   
+		m_ChartPanel.setPreferredSize(new Dimension(800, 600));   
 		setContentPane(m_ChartPanel);   
 
 		m_Frame = new ChartFrame(windowTitle, m_Chart);
@@ -50,14 +50,14 @@ public class SpiderWebChart extends ApplicationFrame
 	// For testing purpose only
 	private void CreateDataset()   
 	{   
-		String s = "First";   
-		String s1 = "Second";   
-		String s2 = "Third";   
-		String s3 = "Category 1";   
-		String s4 = "Category 2";   
-		String s5 = "Category 3";   
-		String s6 = "Category 4";   
-		String s7 = "Category 5";   
+		String s = "Player 1";   
+		String s1 = "Player 2";   
+		String s2 = "Player 3";   
+		String s3 = "Attack";   
+		String s4 = "Defense";   
+		String s5 = "Skill";   
+		String s6 = "Physique";   
+		String s7 = "Teamwork";   
 
 		m_Dataset.addValue(1.0D, s, s3);   
 		m_Dataset.addValue(4D, s, s4);   

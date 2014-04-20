@@ -2,17 +2,21 @@ package footballscout;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
@@ -29,23 +33,29 @@ import javafx.scene.layout.HBox;
 
 public class TeamRoster extends Parent{
 
+	private RESTUtil m_RESTUtil = RESTUtil.getInstance();
 	private GridPane m_RadioButtonGridPane = new GridPane();
 	private GridPane m_DataGridPane = new GridPane();
+	/** Number of players whose detailed data is displayed */
 	private int m_NumPlayers = 0;
 	private ScrollPane m_RadioButtonScrollPane = new ScrollPane();
 	private ScrollPane m_DataScrollPane = new ScrollPane();
 	private int m_NumSelectedRadioButtons = 0;
 	private HashMap<String, GridPane> m_MapDetailedDataGridPane = new HashMap<String, GridPane>();
+	/** m_TotalNumPlayers = m_PlayerList.size() */
+	private int m_TotalNumPlayers = 0;
+	/** List of player IDs */
+	private List<String> m_PlayerList;
 
 	private GridPane CreateDetailedDataGridPane(final String name, String playerID, final RadioButton rb)
 	{
 		//==========================================================
 		// Create the list of data to display for the current player
-		
+
 		final GridPane detailedDataGridPane = new GridPane();
 
 		m_MapDetailedDataGridPane.put(name, detailedDataGridPane);
-		
+
 		Label l1 = new Label("Name ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		// TODO
@@ -277,11 +287,11 @@ public class TeamRoster extends Parent{
 
 		// We're done with drag and drop events
 		//=====================================
-		
+
 		return detailedDataGridPane;
 	}
 
-	public void AddPlayer(final String name, String picture)
+	public void AddPlayer(final String playerID, String picture)
 	{
 		//=============================================
 		// Add the player to the radio button grid pane
@@ -293,7 +303,9 @@ public class TeamRoster extends Parent{
 		final RadioButton rb = new RadioButton();
 		rb.setFocusTraversable(false);
 		rb.setSelected(false);
-		rb.setUserData(name);
+
+		final String name = m_RESTUtil.getStat(playerID, "playerName");
+		rb.setUserData(playerID);
 
 		// Radio button event
 		rb.setOnAction(new EventHandler<ActionEvent>() {
@@ -302,7 +314,7 @@ public class TeamRoster extends Parent{
 				if(rb.isSelected())
 				{
 					System.out.println(name + " selected");
-					m_DataGridPane.add(CreateDetailedDataGridPane(name, "", rb), m_NumSelectedRadioButtons, 0);
+					m_DataGridPane.add(CreateDetailedDataGridPane(name, playerID, rb), m_NumSelectedRadioButtons, 0);
 					++m_NumSelectedRadioButtons;
 				}
 				else
@@ -322,20 +334,32 @@ public class TeamRoster extends Parent{
 		Label label = new Label(name);
 
 		m_RadioButtonGridPane.add(rb, 0, m_NumPlayers);
-		m_RadioButtonGridPane.add(playerPicture, 1, m_NumPlayers);
+		//m_RadioButtonGridPane.add(playerPicture, 1, m_NumPlayers);
 		m_RadioButtonGridPane.add(label, 2, m_NumPlayers);
 		++m_NumPlayers;
 	}
 
-	public TeamRoster()
+	private int m_LoadNextPlayerIndex = -1;
+	void LoadNextPlayer()
 	{
-		// TODO
-		// Retrieve the list of players from the XML
+		++m_LoadNextPlayerIndex;
+		AddPlayer(m_PlayerList.get(m_LoadNextPlayerIndex), "images/default_profile_picture.jpg");
+	}
 
-		AddPlayer("p1", "images/p1.jpg");
+	/** Creates the GUI layout to display the players (radio button scroll pane on the left,
+	 * and data scroll pane to display detailed data on the right).
+	 * Also retrieves the data from the player base. However, the constructor does not
+	 * populates the scroll panes. To do so you need to call LoadNextPlayer <i>m_TotalNumPlayers</i> times.*/
+	public TeamRoster(final ProgressBar pb)
+	{
+		// Retrieve the list of players from the XML
+		m_PlayerList = m_RESTUtil.getPlayerList();
+		m_TotalNumPlayers = m_PlayerList.size();
+
+		/*AddPlayer("p1", "images/p1.jpg");
 		AddPlayer("p2", "images/p2.jpg");
 		for(int i=3;i<20;++i)
-			AddPlayer("p" + i, "images/default_profile_picture.jpg");
+			AddPlayer("p" + i, "images/default_profile_picture.jpg");*/
 
 		m_RadioButtonScrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		m_RadioButtonScrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
@@ -352,4 +376,6 @@ public class TeamRoster extends Parent{
 		this.getChildren().add(m_RadioButtonScrollPane);
 		this.getChildren().add(m_DataScrollPane);
 	}
+
+	public int GetTotalNumPlayers()	{return m_TotalNumPlayers;}
 }
