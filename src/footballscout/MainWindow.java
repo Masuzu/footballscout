@@ -37,8 +37,9 @@ public class MainWindow extends Application {
 	private ProgressBar m_ProgressBar = new ProgressBar();
 	private VBox m_ProgressBarVBox = new VBox();
 	private TeamRoster m_TeamRoaster = null;
-	private Semaphore m_PlayerLoadingComplete;
-
+	private Semaphore m_PlayerLoadingComplete = new Semaphore(0);
+	private Scene m_Scene;
+	
 	public static void main(String[] args) {
 		final String[] _args = args;
 
@@ -87,8 +88,8 @@ public class MainWindow extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Football scout");
-		Scene scene = new Scene(m_Root, 800, 600, Color.WHITE);
-
+		m_Scene = new Scene(m_Root, 800, 600, Color.WHITE);
+		  
 		Button btn = new Button();
 		btn.setLayoutX(700);
 		btn.setLayoutY(500);
@@ -144,7 +145,7 @@ public class MainWindow extends Application {
 		m_ProgressBarVBox.setAlignment(Pos.CENTER);
 		m_Root.getChildren().add(m_ProgressBarVBox);
 		
-		primaryStage.setScene(scene);
+		primaryStage.setScene(m_Scene);
 		primaryStage.show();
 	}
 
@@ -155,18 +156,17 @@ public class MainWindow extends Application {
 	 * Delete this later on*/
 	private void LoadTeamRoster()
 	{
-		m_TeamRoaster = new TeamRoster(m_ProgressBar);
+		m_TeamRoaster = new TeamRoster(m_Scene, m_ProgressBar);
 		m_TeamRoaster.setLayoutX(50);
 		m_TeamRoaster.setLayoutY(50);
 		m_Root.getChildren().add(m_TeamRoaster);
 		final int totalNumPlayers = m_TeamRoaster.GetTotalNumPlayers();
-		m_PlayerLoadingComplete = new Semaphore(0);
 		
 		new Thread() {
 			// runnable for that thread
 			public void run() {
 				
-				for(int i=0; i<totalNumPlayers; ++i)
+				for(int i=0; i<totalNumPlayers/10; ++i)
 				{
 					final double progress = (double)(i+1)/totalNumPlayers;
 					Platform.runLater(new Runnable() {
@@ -185,7 +185,7 @@ public class MainWindow extends Application {
 			// runnable for that thread
 			public void run() {
 				
-				for(int i=0; i<totalNumPlayers; ++i)
+				for(int i=0; i<totalNumPlayers/10; ++i)
 				{
 					try {
 						m_PlayerLoadingComplete.acquire();

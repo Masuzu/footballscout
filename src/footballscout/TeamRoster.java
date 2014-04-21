@@ -14,6 +14,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
@@ -53,18 +54,16 @@ public class TeamRoster extends Parent{
 		// Create the list of data to display for the current player
 
 		final GridPane detailedDataGridPane = new GridPane();
+		detailedDataGridPane.setStyle("-fx-border-color: #ffffff;" + 
+				"-fx-border-width: 1px;" + 
+				"-fx-border-radius: 4;" +
+				"-fx-background-radius: 4;" +
+				"-fx-background-color: linear-gradient(to bottom, #b5bcc6, #dee3e4);" +
+				"-fx-padding: 15;");
+
+		int rowPositionForData = 0;
 
 		m_MapDetailedDataGridPane.put(name, detailedDataGridPane);
-
-		Label l1 = new Label("Name ");
-		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		// TODO
-		// final String name = XMLHelper.getInstance().getStat("1262", "playerName");
-		Label l2 = new Label(name);
-		l2.setStyle("-fx-font-size: 16pt");
-		HBox hbox = new HBox();
-		hbox.getChildren().addAll(l1, l2);
-		detailedDataGridPane.add(hbox, 0, 0);
 
 		ImageView imageDecline = new ImageView(new Image(new File("images/close_icon.png").toURI().toString()));
 		imageDecline.setFitHeight(25);
@@ -85,14 +84,29 @@ public class TeamRoster extends Parent{
 		});
 		detailedDataGridPane.add(closeButton, 1,0);
 
-		l1 = new Label("Total time played ");
+		Label l1 = new Label("Name ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		detailedDataGridPane.add(l1, 0, 1);
 		// TODO
-		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "timePlayed"));
-		//l2.setStyle("-fx-font-size: 16pt");
-		//hbox = new HBox();
-		//hbox.getChildren().addAll(l1, l2);
+		// final String name = XMLHelper.getInstance().getStat("1262", "playerName");
+		Label l2 = new Label(name);
+		l2.setStyle("-fx-font-size: 16pt");
+		HBox hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
+
+		ImageView playerPicture = new ImageView(new Image(new File("images/default_profile_picture.jpg").toURI().toString()));
+		playerPicture.setFitHeight(50);
+		playerPicture.setPreserveRatio(true);
+		detailedDataGridPane.add(playerPicture, 0, rowPositionForData++);
+
+		l1 = new Label("Team name ");
+		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
+		l2 = new Label(m_RESTUtil.getStat(playerID, "teamName"));
+		l2.setStyle("-fx-font-size: 16pt");
+		hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
+		++rowPositionForData;
 
 		Button btn = new Button("Pass precision");
 		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
@@ -102,7 +116,25 @@ public class TeamRoster extends Parent{
 				// TODO
 			}
 		});
-		detailedDataGridPane.add(btn, 0, 2);
+		detailedDataGridPane.add(btn, 0, rowPositionForData++);
+
+		l1 = new Label("Total time played ");
+		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
+		l2 = new Label(m_RESTUtil.getStat(playerID, "timePlayed"));
+		l2.setStyle("-fx-font-size: 16pt");
+		hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
+
+		btn = new Button("Pass precision");
+		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
+		btn.setOnAction(new EventHandler<ActionEvent>() {
+
+			public void handle(ActionEvent event) {
+				// TODO
+			}
+		});
+		detailedDataGridPane.add(btn, 0, rowPositionForData++);
 
 		btn = new Button("Shot precision");
 		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
@@ -112,7 +144,7 @@ public class TeamRoster extends Parent{
 				// TODO
 			}
 		});
-		detailedDataGridPane.add(btn, 0, 3);
+		detailedDataGridPane.add(btn, 0, rowPositionForData++);
 
 		btn = new Button("Co-players");
 		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
@@ -122,81 +154,72 @@ public class TeamRoster extends Parent{
 				// TODO
 			}
 		});
-		detailedDataGridPane.add(btn, 0, 4);
+		detailedDataGridPane.add(btn, 0, rowPositionForData++);
 
 		l1 = new Label("T-shirt number ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		detailedDataGridPane.add(l1, 0, 5);
-		// TODO
-		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "jerseyNumber"));
-		//l2.setStyle("-fx-font-size: 16pt");
-		//hbox = new HBox();
-		//hbox.getChildren().addAll(l1, l2);
+		l2 = new Label(m_RESTUtil.getStat(playerID, "jerseyNumber"));
+		l2.setStyle("-fx-font-size: 16pt");
+		hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 
 		l1 = new Label("Favorite position ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		detailedDataGridPane.add(l1, 0, 6);
-		// TODO
-		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "position"));
-		//l2.setStyle("-fx-font-size: 16pt");
-		//hbox = new HBox();
-		//hbox.getChildren().addAll(l1, l2);
+		l2 = new Label(m_RESTUtil.getStat(playerID, "position"));
+		l2.setStyle("-fx-font-size: 16pt");
+		hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 
 		l1 = new Label("Number of yellow cards ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		detailedDataGridPane.add(l1, 0, 7);
-		// TODO
-		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "yellowcard"));
-		//l2.setStyle("-fx-font-size: 16pt");
-		//hbox = new HBox();
-		//hbox.getChildren().addAll(l1, l2);
+		l2 = new Label(m_RESTUtil.getStat(playerID, "yellowcard"));
+		l2.setStyle("-fx-font-size: 16pt");
+		hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 
 		l1 = new Label("Number of red cards ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		detailedDataGridPane.add(l1, 0, 8);
-		// TODO
-		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "redcard"));
-		//l2.setStyle("-fx-font-size: 16pt");
-		//hbox = new HBox();
-		//hbox.getChildren().addAll(l1, l2);
+		l2 = new Label(m_RESTUtil.getStat(playerID, "redcard"));
+		l2.setStyle("-fx-font-size: 16pt");
+		hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 
 		l1 = new Label("Number of injuries ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		detailedDataGridPane.add(l1, 0, 9);
-		// TODO
-		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "injury"));
-		//l2.setStyle("-fx-font-size: 16pt");
-		//hbox = new HBox();
-		//hbox.getChildren().addAll(l1, l2);
+		l2 = new Label(m_RESTUtil.getStat(playerID, "injury"));
+		l2.setStyle("-fx-font-size: 16pt");
+		hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 
 		l1 = new Label("Number of balls touched ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		detailedDataGridPane.add(l1, 0, 10);
-		// TODO
-		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "ballTouched"));
-		//l2.setStyle("-fx-font-size: 16pt");
-		//hbox = new HBox();
-		//hbox.getChildren().addAll(l1, l2);
+		l2 = new Label(m_RESTUtil.getStat(playerID, "ballTouched"));
+		l2.setStyle("-fx-font-size: 16pt");
+		hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 
 		l1 = new Label("Number of matches ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		detailedDataGridPane.add(l1, 0, 11);
-		// TODO
-		//l2 = new Label(XMLHelper.getInstance().getStat("1262", "appearance"));
-		//l2.setStyle("-fx-font-size: 16pt");
-		//hbox = new HBox();
-		//hbox.getChildren().addAll(l1, l2);
+		l2 = new Label(m_RESTUtil.getStat(playerID, "appearance"));
+		l2.setStyle("-fx-font-size: 16pt");
+		hbox = new HBox();
+		hbox.getChildren().addAll(l1, l2);
+		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 
 		btn = new Button("Average zone");
 		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		btn.setOnAction(new EventHandler<ActionEvent>() {
-
 			public void handle(ActionEvent event) {
 				// TODO
 			}
 		});
-		detailedDataGridPane.add(btn, 0, 12);
-		detailedDataGridPane.setStyle("-fx-background-color:#F5F5F5;");
+		detailedDataGridPane.add(btn, 0, rowPositionForData++);
 
 		//======================//
 		// Drag and drop events //
@@ -255,7 +278,12 @@ public class TeamRoster extends Parent{
 			public void handle(DragEvent event) {
 				/* mouse moved away, remove the graphical cues */
 				detailedDataGridPane.getStyleClass().removeAll();
-				detailedDataGridPane.setStyle("-fx-background-color:#F5F5F5;");
+				detailedDataGridPane.setStyle("-fx-border-color: #ffffff;" + 
+						"-fx-border-width: 1px;" + 
+						"-fx-border-radius: 4;" +
+						"-fx-background-radius: 4;" +
+						"-fx-background-color: linear-gradient(to bottom, #b5bcc6, #dee3e4);" +
+						"-fx-padding: 15;");
 				event.consume();
 			}
 		});
@@ -296,16 +324,11 @@ public class TeamRoster extends Parent{
 		//=============================================
 		// Add the player to the radio button grid pane
 
-		ImageView playerPicture = new ImageView(new Image(new File(picture).toURI().toString()));
-		playerPicture.setFitHeight(50);
-		playerPicture.setPreserveRatio(true);
-
 		final RadioButton rb = new RadioButton();
 		rb.setFocusTraversable(false);
 		rb.setSelected(false);
 
 		final String name = m_RESTUtil.getStat(playerID, "playerName");
-		rb.setUserData(playerID);
 
 		// Radio button event
 		rb.setOnAction(new EventHandler<ActionEvent>() {
@@ -335,7 +358,7 @@ public class TeamRoster extends Parent{
 
 		m_RadioButtonGridPane.add(rb, 0, m_NumPlayers);
 		//m_RadioButtonGridPane.add(playerPicture, 1, m_NumPlayers);
-		m_RadioButtonGridPane.add(label, 2, m_NumPlayers);
+		m_RadioButtonGridPane.add(label, 1, m_NumPlayers);
 		++m_NumPlayers;
 	}
 
@@ -349,8 +372,9 @@ public class TeamRoster extends Parent{
 	/** Creates the GUI layout to display the players (radio button scroll pane on the left,
 	 * and data scroll pane to display detailed data on the right).
 	 * Also retrieves the data from the player base. However, the constructor does not
-	 * populates the scroll panes. To do so you need to call LoadNextPlayer <i>m_TotalNumPlayers</i> times.*/
-	public TeamRoster(final ProgressBar pb)
+	 * populates the scroll panes. To do so you need to call LoadNextPlayer <i>m_TotalNumPlayers</i> times.
+	 * We pass the scene graph as argument to allow automatic resizing.*/
+	public TeamRoster(Scene scene, final ProgressBar pb)
 	{
 		// Retrieve the list of players from the XML
 		m_PlayerList = m_RESTUtil.getPlayerList();
@@ -363,16 +387,18 @@ public class TeamRoster extends Parent{
 
 		m_RadioButtonScrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		m_RadioButtonScrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
-		m_RadioButtonScrollPane.setPrefSize(150, 400);
+		m_RadioButtonScrollPane.prefWidthProperty().bind(scene.widthProperty().multiply(0.1875));
+		m_RadioButtonScrollPane.prefHeightProperty().bind(scene.heightProperty().multiply(0.67));
 		m_RadioButtonScrollPane.setContent(m_RadioButtonGridPane);
 
 		m_DataScrollPane.setHbarPolicy(ScrollBarPolicy.AS_NEEDED);
 		m_DataScrollPane.setVbarPolicy(ScrollBarPolicy.NEVER);
-		m_DataScrollPane.setPrefSize(550, 400);
-		m_DataScrollPane.setLayoutX(150);
+		m_DataScrollPane.prefWidthProperty().bind(scene.widthProperty().multiply(0.6875));
+		m_DataScrollPane.prefHeightProperty().bind(scene.heightProperty().multiply(0.67));
+		m_DataScrollPane.layoutXProperty().bind(scene.widthProperty().multiply(0.1875));
 		m_DataScrollPane.setContent(m_DataGridPane);
 		m_DataGridPane.setGridLinesVisible(true);
-
+		
 		this.getChildren().add(m_RadioButtonScrollPane);
 		this.getChildren().add(m_DataScrollPane);
 	}
