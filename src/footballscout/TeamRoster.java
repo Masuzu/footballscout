@@ -1,10 +1,13 @@
 package footballscout;
 
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
+
+import javax.swing.JFrame;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -45,10 +48,16 @@ public class TeamRoster extends Parent{
 	private HashMap<String, GridPane> m_MapDetailedDataGridPane = new HashMap<String, GridPane>();
 	/** m_TotalNumPlayers = m_PlayerList.size() */
 	private int m_TotalNumPlayers = 0;
+	
 	/** List of player IDs */
 	private List<String> m_PlayerList;
-
-	private GridPane CreateDetailedDataGridPane(final String name, String playerID, final RadioButton rb)
+	
+	/** Displays the calculated indicators for players for comparison */
+	private SpiderWebChart m_PlayerIndicatorsChart = null;   
+	/** Stores the players who have their indicators displayed in m_PlayerIndicatorsChart */
+	private Vector<String> m_PlayerIndicatorsDisplayed = new Vector<String>();
+	
+	private GridPane CreateDetailedDataGridPane(final String name, final String playerID, final RadioButton rb)
 	{
 		//==========================================================
 		// Create the list of data to display for the current player
@@ -86,8 +95,6 @@ public class TeamRoster extends Parent{
 
 		Label l1 = new Label("Name ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		// TODO
-		// final String name = XMLHelper.getInstance().getStat("1262", "playerName");
 		Label l2 = new Label(name);
 		l2.setStyle("-fx-font-size: 16pt");
 		HBox hbox = new HBox();
@@ -108,15 +115,6 @@ public class TeamRoster extends Parent{
 		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 		++rowPositionForData;
 
-		Button btn = new Button("Pass precision");
-		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		btn.setOnAction(new EventHandler<ActionEvent>() {
-
-			public void handle(ActionEvent event) {
-				// TODO
-			}
-		});
-		detailedDataGridPane.add(btn, 0, rowPositionForData++);
 
 		l1 = new Label("Total time played ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
@@ -126,12 +124,16 @@ public class TeamRoster extends Parent{
 		hbox.getChildren().addAll(l1, l2);
 		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 
-		btn = new Button("Pass precision");
+		Button btn = new Button("Pass precision");
 		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				// TODO
+				LineChart chart = new LineChart(name + " - Pass precision", "Match", "Pass precision", "Line Chart Demo");
+				List<String> passPrecision = m_RESTUtil.getStatList(playerID, "passPrecision");
+				int match = 1;
+				for(String value : passPrecision)
+					chart.AddData(Double.parseDouble(value), name, match++);
 			}
 		});
 		detailedDataGridPane.add(btn, 0, rowPositionForData++);
@@ -141,7 +143,11 @@ public class TeamRoster extends Parent{
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				// TODO
+				LineChart chart = new LineChart(name + " - Shot precision", "Match", "Shot precision", "Line Chart Demo");
+				List<String> passPrecision = m_RESTUtil.getStatList(playerID, "shotPrecision");
+				int match = 1;
+				for(String value : passPrecision)
+					chart.AddData(Double.parseDouble(value), name, match++);
 			}
 		});
 		detailedDataGridPane.add(btn, 0, rowPositionForData++);
@@ -217,6 +223,38 @@ public class TeamRoster extends Parent{
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 			public void handle(ActionEvent event) {
 				// TODO
+			}
+		});
+		detailedDataGridPane.add(btn, 0, rowPositionForData++);
+		
+		btn = new Button("Indicators");
+		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
+		btn.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				if(m_PlayerIndicatorsChart == null)
+					m_PlayerIndicatorsChart = new SpiderWebChart("Player indicators", "");
+				if(!m_PlayerIndicatorsDisplayed.contains(name))
+				{
+					m_PlayerIndicatorsDisplayed.add(name);
+					m_PlayerIndicatorsChart.AddData(Double.parseDouble(m_RESTUtil.getStat(playerID, "attack")), name, "Attack");
+					m_PlayerIndicatorsChart.AddData(Double.parseDouble(m_RESTUtil.getStat(playerID, "defense")), name, "Defense");
+					m_PlayerIndicatorsChart.AddData(Double.parseDouble(m_RESTUtil.getStat(playerID, "skill")), name, "Skill");
+					m_PlayerIndicatorsChart.AddData(Double.parseDouble(m_RESTUtil.getStat(playerID, "physique")), name, "Physique");
+					m_PlayerIndicatorsChart.AddData(Double.parseDouble(m_RESTUtil.getStat(playerID, "teamwork")), name, "Teamwork");
+				}
+				else
+				{
+					m_PlayerIndicatorsDisplayed.remove(name);
+					m_PlayerIndicatorsChart.RemoveSeries(name);
+				}
+				if(m_PlayerIndicatorsDisplayed.isEmpty())
+				{
+					// BUG : this will close the application...
+					//m_PlayerIndicatorsChart.Close();
+					//m_PlayerIndicatorsChart = null;
+				}
+				else
+					m_PlayerIndicatorsChart.SetVisible(true);
 			}
 		});
 		detailedDataGridPane.add(btn, 0, rowPositionForData++);
@@ -401,6 +439,8 @@ public class TeamRoster extends Parent{
 		
 		this.getChildren().add(m_RadioButtonScrollPane);
 		this.getChildren().add(m_DataScrollPane);
+		
+		// m_PlayerIndicatorsChart.dispatchEvent(new WindowEvent(m_PlayerIndicatorsChart, WindowEvent.WINDOW_CLOSING));
 	}
 
 	public int GetTotalNumPlayers()	{return m_TotalNumPlayers;}

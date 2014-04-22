@@ -33,7 +33,8 @@ public class LineChart extends ApplicationFrame {
 		m_ChartPanel.setMouseWheelEnabled(true);
 		setContentPane(m_ChartPanel);
 
-		CreateDataset(); 
+		// For testing purposes
+		// CreateDataset(); 
 		
 		m_Frame = new ChartFrame(windowTitle,m_Chart);
 		m_Frame.pack();
@@ -55,7 +56,7 @@ public class LineChart extends ApplicationFrame {
 		m_Dataset.removeRow(series);
 	}
 
-	// For testing purposes only
+	/** For testing purposes only */
 	private void CreateDataset() {
 
 		// row keys...
@@ -130,7 +131,8 @@ public class LineChart extends ApplicationFrame {
 
 		// customise the range axis...
 		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		rangeAxis.setStandardTickUnits(NumberAxis.createStandardTickUnits());
+		
 		rangeAxis.setAutoRangeIncludesZero(true);
 
 		// customise the renderer...

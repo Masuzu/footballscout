@@ -5,11 +5,14 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.JDialog;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+import javafx.embed.swing.JFXPanel;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -27,6 +30,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainWindow extends Application {
@@ -87,9 +91,9 @@ public class MainWindow extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		primaryStage.setTitle("Football scout");
+		primaryStage.setTitle("Football scout");	
 		m_Scene = new Scene(m_Root, 800, 600, Color.WHITE);
-		  
+	      
 		Button btn = new Button();
 		btn.setLayoutX(700);
 		btn.setLayoutY(500);

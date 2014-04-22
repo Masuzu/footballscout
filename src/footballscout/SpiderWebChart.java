@@ -1,7 +1,9 @@
 package footballscout;
 
 import java.awt.Dimension;   
+import java.awt.event.WindowEvent;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;   
 
 import org.jfree.chart.ChartFrame;
@@ -25,7 +27,8 @@ public class SpiderWebChart extends ApplicationFrame
 	{   
 		super(windowTitle);   
 
-		CreateDataset();  
+		// For testing purposes
+		// CreateDataset();  
 
 		m_Chart = CreateChart(chartTitle, m_Dataset);   
 		m_ChartPanel = new ChartPanel(m_Chart);   
@@ -35,6 +38,7 @@ public class SpiderWebChart extends ApplicationFrame
 		m_Frame = new ChartFrame(windowTitle, m_Chart);
 		m_Frame.pack();
 		m_Frame.setVisible(true);
+		//setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}   
 
 	public void AddData(double value, Comparable series, Comparable category)
@@ -47,7 +51,17 @@ public class SpiderWebChart extends ApplicationFrame
 		m_Dataset.removeRow(series);
 	}
 	
-	// For testing purpose only
+	public void SetVisible(boolean b)
+	{
+		m_Frame.setVisible(b);
+	}
+	
+	public void Close()
+	{
+		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+	}
+	
+	/** For testing purpose only */
 	private void CreateDataset()   
 	{   
 		String s = "Player 1";   
@@ -79,7 +93,7 @@ public class SpiderWebChart extends ApplicationFrame
 	private JFreeChart CreateChart(String chartTitle, CategoryDataset categorydataset)   
 	{   
 		SpiderWebPlot spiderwebplot = new SpiderWebPlot(categorydataset);   
-		JFreeChart jfreechart = new JFreeChart("Spider Chart Demo", TextTitle.DEFAULT_FONT, spiderwebplot, false);   
+		JFreeChart jfreechart = new JFreeChart(chartTitle, TextTitle.DEFAULT_FONT, spiderwebplot, false);   
 		LegendTitle legendtitle = new LegendTitle(spiderwebplot);   
 		legendtitle.setPosition(RectangleEdge.BOTTOM);   
 		jfreechart.addSubtitle(legendtitle);

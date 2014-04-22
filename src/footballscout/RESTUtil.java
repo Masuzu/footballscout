@@ -43,14 +43,15 @@ public class RESTUtil {
 	// Example: 
 	//	getStatList("1","numGoal") will return the goal(s) of that player's each game
 	public List<String> getStatList(String playerId, String item){
-		statURL = String.format(statURL, playerId);
-		stat = new XMLHelper(statURL);
+		String _statURL = String.format(statURL, playerId);
+		stat = new XMLHelper(_statURL);
 		return stat.getList(item);
 	}
 	
 	public static void main(String[] args){
 		// Example of usage
 		RESTUtil util = RESTUtil.getInstance();
-		System.out.println(util.getStatList("1262", "numGoal"));
+		System.out.println(util.getStatList("1262", "passPrecision"));
+		System.out.println(util.getStatList("4124", "passPrecision"));
 	}
 }
