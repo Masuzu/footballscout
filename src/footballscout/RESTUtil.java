@@ -51,7 +51,9 @@ public class RESTUtil {
 	public static void main(String[] args){
 		// Example of usage
 		RESTUtil util = RESTUtil.getInstance();
+		System.out.println(util.getStat("1262", "passPrecision"));
 		System.out.println(util.getStatList("1262", "passPrecision"));
 		System.out.println(util.getStatList("4124", "passPrecision"));
+		System.out.println(util.getStat("1262", "passPrecision"));
 	}
 }

@@ -18,7 +18,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class XMLHelper {
-	private static Document doc;
+	private Document doc;
 	private static final String QUERY_ITEM = "//%s[../playerId=%s]";
 	private static final String QUERY_LIST = "//%s";
 	
