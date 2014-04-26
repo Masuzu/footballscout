@@ -11,6 +11,9 @@ public class RESTUtil {
 	private XMLHelper stat; // statistics of player per game
 	private String statURL;
 	
+	private XMLHelper similar;
+	private String similarURL;
+	
 	private RESTUtil(){
 		ResourceBundle rb = ResourceBundle.getBundle("config");
 		// URL for the "players"
@@ -20,6 +23,10 @@ public class RESTUtil {
 		statURL = rb.getString("webservice.baseURL") +
 						 rb.getString("webservice.api.stats");
 		player = new XMLHelper(playerURL);
+		
+		// URL for similar players
+		similarURL = rb.getString("webservice.baseURL") +
+					 rb.getString("webservice.api.similarPlayers");
 	}
 	
 	public static RESTUtil getInstance(){
@@ -48,6 +55,12 @@ public class RESTUtil {
 		return stat.getList(item);
 	}
 	
+	public List<String> getSimilarPlayers(String playerId){
+		String _similarURL = String.format(similarURL, playerId);
+		similar = new XMLHelper(_similarURL);
+		return similar.getList("playerId");
+	}
+	
 	public static void main(String[] args){
 		// Example of usage
 		RESTUtil util = RESTUtil.getInstance();
@@ -55,5 +68,6 @@ public class RESTUtil {
 		System.out.println(util.getStatList("1262", "passPrecision"));
 		System.out.println(util.getStatList("4124", "passPrecision"));
 		System.out.println(util.getStat("1262", "passPrecision"));
+		System.out.println(util.getSimilarPlayers("1262"));
 	}
 }
