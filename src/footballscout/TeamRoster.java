@@ -73,8 +73,8 @@ public class TeamRoster extends Parent{
 		int rowPositionForData = 0;
 
 		m_MapDetailedDataGridPane.put(name, detailedDataGridPane);
-
-		ImageView imageDecline = new ImageView(new Image(new File("images/close_icon.png").toURI().toString()));
+	        
+		ImageView imageDecline = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("data/close_icon.png")));
 		imageDecline.setFitHeight(25);
 		imageDecline.setFitWidth(25);
 		Button closeButton = new Button();
@@ -101,7 +101,7 @@ public class TeamRoster extends Parent{
 		hbox.getChildren().addAll(l1, l2);
 		detailedDataGridPane.add(hbox, 0, rowPositionForData++);
 
-		ImageView playerPicture = new ImageView(new Image(new File("images/default_profile_picture.jpg").toURI().toString()));
+		ImageView playerPicture = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("data/default_profile_picture.jpg")));
 		playerPicture.setFitHeight(50);
 		playerPicture.setPreserveRatio(true);
 		detailedDataGridPane.add(playerPicture, 0, rowPositionForData++);
@@ -129,7 +129,7 @@ public class TeamRoster extends Parent{
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				LineChart chart = new LineChart(name + " - Pass precision", "Match", "Pass precision", "Line Chart Demo");
+				LineChart chart = new LineChart(name + " - Pass precision", "Match", "Pass precision", "");
 				List<String> passPrecision = m_RESTUtil.getStatList(playerID, "passPrecision");
 				int match = 1;
 				for(String value : passPrecision)
@@ -143,7 +143,7 @@ public class TeamRoster extends Parent{
 		btn.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
-				LineChart chart = new LineChart(name + " - Shot precision", "Match", "Shot precision", "Line Chart Demo");
+				LineChart chart = new LineChart(name + " - Shot precision", "Match", "Shot precision", "");
 				List<String> passPrecision = m_RESTUtil.getStatList(playerID, "shotPrecision");
 				int match = 1;
 				for(String value : passPrecision)

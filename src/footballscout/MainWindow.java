@@ -43,7 +43,7 @@ public class MainWindow extends Application {
 	private TeamRoster m_TeamRoaster = null;
 	private Semaphore m_PlayerLoadingComplete = new Semaphore(0);
 	private Scene m_Scene;
-	
+
 	public static void main(String[] args) {
 		final String[] _args = args;
 
@@ -93,45 +93,6 @@ public class MainWindow extends Application {
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Football scout");	
 		m_Scene = new Scene(m_Root, 800, 600, Color.WHITE);
-	      
-		Button btn = new Button();
-		btn.setLayoutX(700);
-		btn.setLayoutY(500);
-		btn.setText("Test button");
-		btn.setOnAction(new EventHandler<ActionEvent>() {
-
-			public void handle(ActionEvent event) {
-				System.out.println("Test button");
-			}
-		});
-		m_Root.getChildren().add(btn);
-
-		btn = new Button();
-		btn.setLayoutX(700);
-		btn.setLayoutY(530);
-		btn.setText("Test pie chart");
-		btn.setOnAction(new EventHandler<ActionEvent>() {
-
-			public void handle(ActionEvent event) {
-				PieGraph p = new PieGraph("Test pie graph", "");
-				p.AddData("Category1",43.2);
-				p.AddData("Category2",27.9);
-				p.AddData("Category3",79.5);
-			}
-		});
-		m_Root.getChildren().add(btn);
-
-		btn = new Button();
-		btn.setLayoutX(700);
-		btn.setLayoutY(560);
-		btn.setText("Test line chart");
-		btn.setOnAction(new EventHandler<ActionEvent>() {
-
-			public void handle(ActionEvent event) {
-				LineChart p = new LineChart("Line Chart Demo", "Type", "Value", "Line Chart Demo");
-			}
-		});
-		m_Root.getChildren().add(btn);
 
 		// Filter combo box
 		CreateFilterPlayerPositionPane();
@@ -139,25 +100,10 @@ public class MainWindow extends Application {
 		// Team roster
 		LoadTeamRoster();
 
-		m_ProgressBar.setPrefSize(600, 50);
-		Label l = new Label("Loading data");
-		l.setStyle("-fx-font-size: 30pt");
-		m_ProgressBarVBox = new VBox();
-		m_ProgressBarVBox.getChildren().addAll(l, m_ProgressBar);
-		m_ProgressBarVBox.setLayoutX(100);
-		m_ProgressBarVBox.setLayoutY(250);
-		m_ProgressBarVBox.setAlignment(Pos.CENTER);
-		m_Root.getChildren().add(m_ProgressBarVBox);
-		
 		primaryStage.setScene(m_Scene);
 		primaryStage.show();
 	}
 
-	/** TODO the goal would be to display a progress bar updating a the same time as the players are laoded
-	 * Not working at all for now :/ No idea why so far
-	 * 
-	 * NVM scratch that the stuff above works
-	 * Delete this later on*/
 	private void LoadTeamRoster()
 	{
 		m_TeamRoaster = new TeamRoster(m_Scene, m_ProgressBar);
@@ -165,11 +111,11 @@ public class MainWindow extends Application {
 		m_TeamRoaster.setLayoutY(50);
 		m_Root.getChildren().add(m_TeamRoaster);
 		final int totalNumPlayers = m_TeamRoaster.GetTotalNumPlayers();
-		
+
 		new Thread() {
 			// runnable for that thread
 			public void run() {
-				
+
 				for(int i=0; i<totalNumPlayers/10; ++i)
 				{
 					final double progress = (double)(i+1)/totalNumPlayers;
@@ -183,12 +129,12 @@ public class MainWindow extends Application {
 				}
 			}
 		}.start();
-		
+
 		// Wait for player loading completion
 		new Thread() {
 			// runnable for that thread
 			public void run() {
-				
+
 				for(int i=0; i<totalNumPlayers/10; ++i)
 				{
 					try {
@@ -200,5 +146,15 @@ public class MainWindow extends Application {
 				m_ProgressBarVBox.setVisible(false);
 			}
 		}.start();
+
+		m_ProgressBar.setPrefSize(600, 50);
+		Label l = new Label("Loading data");
+		l.setStyle("-fx-font-size: 30pt");
+		m_ProgressBarVBox = new VBox();
+		m_ProgressBarVBox.getChildren().addAll(l, m_ProgressBar);
+		m_ProgressBarVBox.setLayoutX(100);
+		m_ProgressBarVBox.setLayoutY(250);
+		m_ProgressBarVBox.setAlignment(Pos.CENTER);
+		m_Root.getChildren().add(m_ProgressBarVBox);
 	}
 }
