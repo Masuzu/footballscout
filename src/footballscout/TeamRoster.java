@@ -25,6 +25,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
@@ -34,6 +35,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 
 public class TeamRoster extends Parent{
 
@@ -74,11 +77,13 @@ public class TeamRoster extends Parent{
 
 		m_MapDetailedDataGridPane.put(name, detailedDataGridPane);
 	        
+		// Close icon
 		ImageView imageDecline = new ImageView(new Image(this.getClass().getClassLoader().getResourceAsStream("data/close_icon.png")));
 		imageDecline.setFitHeight(25);
 		imageDecline.setFitWidth(25);
 		Button closeButton = new Button();
 		closeButton.setGraphic(imageDecline);
+		//closeButton.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
 		closeButton.setOnAction(new EventHandler<ActionEvent>() {
 
 			public void handle(ActionEvent event) {
@@ -91,8 +96,8 @@ public class TeamRoster extends Parent{
 				rb.setSelected(false);
 			}
 		});
-		detailedDataGridPane.add(closeButton, 1,0);
-
+		detailedDataGridPane.add(closeButton, 1,0);	
+		 
 		Label l1 = new Label("Name ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		Label l2 = new Label(name);
@@ -152,16 +157,17 @@ public class TeamRoster extends Parent{
 		});
 		detailedDataGridPane.add(btn, 0, rowPositionForData++);
 
-		btn = new Button("Co-players");
+		btn = new Button("Similar-players");
 		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
-		btn.setOnAction(new EventHandler<ActionEvent>() {
-
-			public void handle(ActionEvent event) {
-				// TODO
-			}
-		});
 		detailedDataGridPane.add(btn, 0, rowPositionForData++);
-
+		Tooltip tooltip = new Tooltip();
+		List<String> similarPlayers = m_RESTUtil.getSimilarPlayers(playerID);
+		String similarPlayersTooltipText = "";
+		for(String ID : similarPlayers)
+			similarPlayersTooltipText += (m_RESTUtil.getStat(ID, "playerName") + "\n");
+		tooltip.setText(similarPlayersTooltipText);
+		btn.setTooltip(tooltip);
+		
 		l1 = new Label("T-shirt number ");
 		l1.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		l2 = new Label(m_RESTUtil.getStat(playerID, "jerseyNumber"));
@@ -226,7 +232,7 @@ public class TeamRoster extends Parent{
 			}
 		});
 		detailedDataGridPane.add(btn, 0, rowPositionForData++);
-		
+        
 		btn = new Button("Indicators");
 		btn.setStyle("-fx-font-size: 16pt;-fx-font-weight: bold");
 		btn.setOnAction(new EventHandler<ActionEvent>() {
@@ -390,10 +396,11 @@ public class TeamRoster extends Parent{
 		});
 
 		Label label = new Label(name);
-
 		m_RadioButtonGridPane.add(rb, 0, m_NumPlayers);
 		//m_RadioButtonGridPane.add(playerPicture, 1, m_NumPlayers);
 		m_RadioButtonGridPane.add(label, 1, m_NumPlayers);
+		rb.setStyle("visibility:collapse");
+		label.setStyle("visibility:collapse");
 		++m_NumPlayers;
 	}
 

@@ -26,12 +26,11 @@ public class PassView
 	Graph<Integer, String> m_Graph;
 	int m_MaxNumPasses = 0;
 
-	public PassView(String match_id, String teamID)
+	public PassView(String match_id, String teamID, String windowName)
 	{
 		//=============
 		// Data loading
 		m_Graph = new DirectedSparseGraph<Integer, String>();
-
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("data/Player-Pass.csv")));
 		String line;
@@ -117,7 +116,7 @@ public class PassView
 		vv.getRenderContext().setEdgeLabelTransformer(edgeLabeller);
 		vv.getRenderer().getVertexLabelRenderer().setPosition(Position.N); 
 
-		JFrame frame = new JFrame("Graph View of the passes");
+		JFrame frame = new JFrame(windowName);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().add(vv);
 		frame.pack();
@@ -125,6 +124,6 @@ public class PassView
 	}
 
 	public static void main(String[] args) {
-		new PassView("131897", "810");
+		new PassView("131897", "810", "");
 	}
 }

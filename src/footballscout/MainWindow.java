@@ -92,13 +92,17 @@ public class MainWindow extends Application {
 		rb2.setToggleGroup(group);
 		gridPaneMatchListComboBox.add(rb2, 5, 0);
 
+		final TeamParser teams = new TeamParser();
+		
 		matchListComboBox.valueProperty().addListener(new ChangeListener<String>() {
 			@Override 
 			public void changed(ObservableValue ov, String t, String t1)
 			{                
 				String[] teamIDs = matches.m_Matches.get(t1).split("-");
-				Team1Label.setText(teamIDs[0]);
-				Team2Label.setText(teamIDs[1]);
+				Team1Label.setText(teams.m_Teams.get(teamIDs[0]));
+				Team1Label.setUserData(teamIDs[0]);
+				Team2Label.setText(teams.m_Teams.get(teamIDs[1]));
+				Team2Label.setUserData(teamIDs[1]);
 				rb1.setSelected(true);
 			}    
 		});
@@ -109,9 +113,9 @@ public class MainWindow extends Application {
 				if(matchListComboBox.getValue() != null)
 				{
 					if(rb1.isSelected())
-						new PassView(matchListComboBox.getValue().toString(), Team1Label.getText());
+						new PassView(matchListComboBox.getValue().toString(), Team1Label.getUserData().toString(), "Graph View of the passes - " + Team1Label.getText() + " VS " + Team2Label.getText() + " - " + Team1Label.getText() + " POV");
 					else
-						new PassView(matchListComboBox.getValue().toString(), Team2Label.getText());
+						new PassView(matchListComboBox.getValue().toString(), Team2Label.getUserData().toString(), "Graph View of the passes - " + Team1Label.getText() + " VS " + Team2Label.getText() + " - " + Team2Label.getText() + " POV");
 				}
 			}
 		});
@@ -162,7 +166,7 @@ public class MainWindow extends Application {
 		m_TeamRoaster.setLayoutY(50);
 		m_Root.getChildren().add(m_TeamRoaster);
 		final int totalNumPlayers = m_TeamRoaster.GetTotalNumPlayers();
-
+		
 		new Thread() {
 			// runnable for that thread
 			public void run() {
