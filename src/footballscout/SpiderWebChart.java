@@ -38,7 +38,7 @@ public class SpiderWebChart extends ApplicationFrame
 		m_Frame = new ChartFrame(windowTitle, m_Chart);
 		m_Frame.pack();
 		m_Frame.setVisible(true);
-		//setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	}   
 
 	public void AddData(double value, Comparable series, Comparable category)
@@ -58,7 +58,7 @@ public class SpiderWebChart extends ApplicationFrame
 	
 	public void Close()
 	{
-		dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
+		m_Frame.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	}
 	
 	/** For testing purpose only */

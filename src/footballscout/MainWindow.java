@@ -1,5 +1,6 @@
 package footballscout;
 
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.Semaphore;
@@ -9,6 +10,8 @@ import javax.swing.JDialog;
 
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -23,8 +26,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -52,6 +57,67 @@ public class MainWindow extends Application {
 			{
 				Application.launch(MainWindow.class, _args);
 			}});  t.start();
+	}
+
+	private void CreateMatchGraphViewPane()
+	{
+		// Load the list of matches and teams who met for each match
+		final MatchParser matches = new MatchParser();
+		ObservableList<String> options = FXCollections.observableArrayList();
+		for(Map.Entry<String, String> entry : matches.m_Matches.entrySet())
+			options.add(entry.getKey());
+
+		final ComboBox matchListComboBox  = new ComboBox(options);
+
+		GridPane gridPaneMatchListComboBox = new GridPane();
+		gridPaneMatchListComboBox.setVgap(4);
+		gridPaneMatchListComboBox.setHgap(10);
+		gridPaneMatchListComboBox.setPadding(new Insets(5, 5, 5, 5));
+		gridPaneMatchListComboBox.add(new Label("Select a match: "), 0, 0);
+		gridPaneMatchListComboBox.add(matchListComboBox, 1, 0);
+		gridPaneMatchListComboBox.layoutYProperty().bind(m_Scene.heightProperty().multiply(0.8));	
+
+		// Radio buttons to select one of the teams for each match
+		ToggleGroup group = new ToggleGroup();
+
+		final Label Team1Label = new Label("");
+		gridPaneMatchListComboBox.add(Team1Label, 2, 0);
+		final RadioButton rb1 = new RadioButton();
+		rb1.setToggleGroup(group);
+		gridPaneMatchListComboBox.add(rb1, 3, 0);
+
+		final Label Team2Label = new Label("");
+		gridPaneMatchListComboBox.add(Team2Label, 4, 0);
+		final RadioButton rb2 = new RadioButton();
+		rb2.setToggleGroup(group);
+		gridPaneMatchListComboBox.add(rb2, 5, 0);
+
+		matchListComboBox.valueProperty().addListener(new ChangeListener<String>() {
+			@Override 
+			public void changed(ObservableValue ov, String t, String t1)
+			{                
+				String[] teamIDs = matches.m_Matches.get(t1).split("-");
+				Team1Label.setText(teamIDs[0]);
+				Team2Label.setText(teamIDs[1]);
+				rb1.setSelected(true);
+			}    
+		});
+
+		Button displayGraphView = new Button("Display graph view");
+		displayGraphView.setOnAction(new EventHandler<ActionEvent>() {
+			public void handle(ActionEvent event) {
+				if(matchListComboBox.getValue() != null)
+				{
+					if(rb1.isSelected())
+						new PassView(matchListComboBox.getValue().toString(), Team1Label.getText());
+					else
+						new PassView(matchListComboBox.getValue().toString(), Team2Label.getText());
+				}
+			}
+		});
+		gridPaneMatchListComboBox.add(displayGraphView, 6, 0);		
+
+		m_Root.getChildren().add(gridPaneMatchListComboBox);
 	}
 
 	private void CreateFilterPlayerPositionPane()
@@ -87,21 +153,6 @@ public class MainWindow extends Application {
 		});
 		gridPaneFilterComboBox.add(m_FilterPlayerPositionButton, 2, 0);		
 		m_Root.getChildren().add(gridPaneFilterComboBox);
-	}
-
-	@Override
-	public void start(Stage primaryStage) {
-		primaryStage.setTitle("Football scout");	
-		m_Scene = new Scene(m_Root, 800, 600, Color.WHITE);
-
-		// Filter combo box
-		CreateFilterPlayerPositionPane();
-
-		// Team roster
-		LoadTeamRoster();
-
-		primaryStage.setScene(m_Scene);
-		primaryStage.show();
 	}
 
 	private void LoadTeamRoster()
@@ -157,4 +208,22 @@ public class MainWindow extends Application {
 		m_ProgressBarVBox.setAlignment(Pos.CENTER);
 		m_Root.getChildren().add(m_ProgressBarVBox);
 	}
+
+	@Override
+	public void start(Stage primaryStage) {
+		primaryStage.setTitle("Football scout");	
+		m_Scene = new Scene(m_Root, 800, 600, Color.WHITE);
+
+		// Filter combo box
+		CreateFilterPlayerPositionPane();
+
+		CreateMatchGraphViewPane();
+
+		// Team roster
+		LoadTeamRoster();
+
+		primaryStage.setScene(m_Scene);
+		primaryStage.show();
+	}
+
 }

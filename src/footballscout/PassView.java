@@ -21,7 +21,8 @@ import javax.swing.JFrame;
 
 import org.apache.commons.collections15.Transformer;
 
-public class PassView {
+public class PassView 
+{
 	Graph<Integer, String> m_Graph;
 	int m_MaxNumPasses = 0;
 
@@ -117,7 +118,7 @@ public class PassView {
 		vv.getRenderer().getVertexLabelRenderer().setPosition(Position.N); 
 
 		JFrame frame = new JFrame("Graph View of the passes");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.getContentPane().add(vv);
 		frame.pack();
 		frame.setVisible(true);

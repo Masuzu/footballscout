@@ -249,12 +249,9 @@ public class TeamRoster extends Parent{
 				}
 				if(m_PlayerIndicatorsDisplayed.isEmpty())
 				{
-					// BUG : this will close the application...
-					//m_PlayerIndicatorsChart.Close();
-					//m_PlayerIndicatorsChart = null;
+					m_PlayerIndicatorsChart.Close();
+					m_PlayerIndicatorsChart = null;
 				}
-				else
-					m_PlayerIndicatorsChart.SetVisible(true);
 			}
 		});
 		detailedDataGridPane.add(btn, 0, rowPositionForData++);
@@ -357,7 +354,7 @@ public class TeamRoster extends Parent{
 		return detailedDataGridPane;
 	}
 
-	public void AddPlayer(final String playerID, String picture)
+	public void AddPlayer(final String playerID)
 	{
 		//=============================================
 		// Add the player to the radio button grid pane
@@ -404,7 +401,7 @@ public class TeamRoster extends Parent{
 	void LoadNextPlayer()
 	{
 		++m_LoadNextPlayerIndex;
-		AddPlayer(m_PlayerList.get(m_LoadNextPlayerIndex), "images/default_profile_picture.jpg");
+		AddPlayer(m_PlayerList.get(m_LoadNextPlayerIndex));
 	}
 
 	/** Creates the GUI layout to display the players (radio button scroll pane on the left,
@@ -417,11 +414,6 @@ public class TeamRoster extends Parent{
 		// Retrieve the list of players from the XML
 		m_PlayerList = m_RESTUtil.getPlayerList();
 		m_TotalNumPlayers = m_PlayerList.size();
-
-		/*AddPlayer("p1", "images/p1.jpg");
-		AddPlayer("p2", "images/p2.jpg");
-		for(int i=3;i<20;++i)
-			AddPlayer("p" + i, "images/default_profile_picture.jpg");*/
 
 		m_RadioButtonScrollPane.setHbarPolicy(ScrollBarPolicy.NEVER);
 		m_RadioButtonScrollPane.setVbarPolicy(ScrollBarPolicy.AS_NEEDED);
@@ -439,8 +431,6 @@ public class TeamRoster extends Parent{
 		
 		this.getChildren().add(m_RadioButtonScrollPane);
 		this.getChildren().add(m_DataScrollPane);
-		
-		// m_PlayerIndicatorsChart.dispatchEvent(new WindowEvent(m_PlayerIndicatorsChart, WindowEvent.WINDOW_CLOSING));
 	}
 
 	public int GetTotalNumPlayers()	{return m_TotalNumPlayers;}
